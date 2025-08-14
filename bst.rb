@@ -68,6 +68,52 @@ class Tree
     return root
   end
 
+  def find(value, root=self.root)
+    if root.nil?
+      return "not found"
+    end
+    if root.value == value
+      return root
+    elsif root.value < value
+      return find(value, root.right)
+    else
+      return find(value, root.left)
+    end
+  end
+
+  def level_order
+    if self.root.nil? then return end
+    queue = []
+    queue.append(self.root)
+    while !queue.empty?
+      removed_node = queue.shift
+      yield(removed_node.value)
+      if !removed_node.left.nil? then queue.append(removed_node.left) end
+      if !removed_node.right.nil? then queue.append(removed_node.right) end
+    end
+  end
+
+  def preorder(root=self.root, &block)
+    if root.nil? then return end
+    yield(root.value)
+    preorder(root.left, &block)
+    preorder(root.right, &block)
+  end
+
+  def inorder(root=self.root, &block)
+    if root.nil? then return end
+    inorder(root.left, &block)
+    yield(root.value)
+    inorder(root.right, &block)
+  end
+
+  def postorder(root=self.root, &block)
+    if root.nil? then return end
+    postorder(root.left, &block)
+    postorder(root.right, &block)
+    yield(root.value)
+  end
+
   class Node
     attr_accessor :value, :left, :right
 
@@ -79,11 +125,9 @@ class Tree
   end
 end
 
-my_tree = Tree.new([5, 6, 7, 2, 3, 4, 1])
+my_tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
 my_tree.pretty_print
-puts("----")
-my_tree.insert(8)
-my_tree.pretty_print
-puts("----")
-my_tree.delete(8)
-my_tree.pretty_print
+my_tree.postorder do |node|
+  print node
+end
+print "\n"
