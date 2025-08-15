@@ -114,6 +114,29 @@ class Tree
     yield(root.value)
   end
 
+  def height(value, root=self.root)
+    if root.nil?
+      return
+    elsif root.value == value
+      right_root, left_root = root, root
+      right_height, left_height = 0, 0
+      while !right_root.nil?
+        right_root = right_root.right
+        right_height += 1
+      end
+      while !left_root.nil?
+        left_root = left_root.left
+        left_height += 1
+      end
+
+      return [right_height, left_height].max - 1
+    elsif root.value < value
+      return height(value, root=root.right)
+    else
+      return height(value, root=root.left)
+    end
+  end
+
   class Node
     attr_accessor :value, :left, :right
 
@@ -127,7 +150,4 @@ end
 
 my_tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
 my_tree.pretty_print
-my_tree.postorder do |node|
-  print node
-end
-print "\n"
+p my_tree.height(4)
