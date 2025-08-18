@@ -137,6 +137,20 @@ class Tree
     end
   end
 
+  def depth(value, root=self.root, count=0)
+    if root.nil? then return end
+    
+    if root.value == value
+      return count
+    elsif root.value < value
+      count += 1
+      return depth(value, root.right, count)
+    elsif root.value > value
+      count += 1
+      return depth(value, root.left, count)
+    end
+  end
+
   class Node
     attr_accessor :value, :left, :right
 
@@ -150,4 +164,4 @@ end
 
 my_tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
 my_tree.pretty_print
-p my_tree.height(4)
+p my_tree.depth(5)
