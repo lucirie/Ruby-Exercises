@@ -145,6 +145,13 @@ class Tree
    return balanced?(node.left) && balanced?(node.right)
   end
 
+  def rebalance
+    arr = []
+    self.inorder {|node| arr.append(node)}
+    self.root = build_tree(arr, 0, arr.length)
+    return self.root
+  end
+
   class Node
     attr_accessor :value, :left, :right
 
@@ -155,7 +162,3 @@ class Tree
     end
   end
 end
-
-my_tree = Tree.new([1, 2, 3, 4, 5, 6, 7, 8])
-my_tree.pretty_print
-puts my_tree.balanced?
