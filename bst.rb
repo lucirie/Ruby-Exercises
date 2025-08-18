@@ -1,5 +1,4 @@
 class Tree
-  include Comparable
   attr_accessor :root
 
   def initialize(arr)
@@ -114,27 +113,12 @@ class Tree
     yield(root.value)
   end
 
-  def height(value, root=self.root)
-    if root.nil?
-      return
-    elsif root.value == value
-      right_root, left_root = root, root
-      right_height, left_height = 0, 0
-      while !right_root.nil?
-        right_root = right_root.right
-        right_height += 1
-      end
-      while !left_root.nil?
-        left_root = left_root.left
-        left_height += 1
-      end
+  def height(node=self.root)
+    return -1 if node.nil?
 
-      return [right_height, left_height].max - 1
-    elsif root.value < value
-      return height(value, root=root.right)
-    else
-      return height(value, root=root.left)
-    end
+    left_height = height(node.left)
+    right_height = height(node.right)
+    return [left_height, right_height].max + 1
   end
 
   def depth(value, root=self.root, count=0)
@@ -151,6 +135,16 @@ class Tree
     end
   end
 
+  def balanced?(node=self.root, node_heights=[])
+   return true if node.nil?
+   left_height = height(node.left)
+   right_height = height(node.right)
+
+   return false if (left_height - right_height).abs > 1
+
+   return balanced?(node.left) && balanced?(node.right)
+  end
+
   class Node
     attr_accessor :value, :left, :right
 
@@ -162,6 +156,6 @@ class Tree
   end
 end
 
-my_tree = Tree.new([1, 2, 3, 4, 5, 6, 7])
+my_tree = Tree.new([1, 2, 3, 4, 5, 6, 7, 8])
 my_tree.pretty_print
-p my_tree.depth(5)
+puts my_tree.balanced?
